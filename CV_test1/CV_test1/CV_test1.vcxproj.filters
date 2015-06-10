@@ -24,5 +24,37 @@
     <ClCompile Include="기본 받기소스.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\packages\OpenCV.2.4.10\build\native\include\opencv\cvaux.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\packages\OpenCV.2.4.10\build\native\include\opencv\cvblob.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\packages\OpenCV.2.4.10\build\native\include\opencv\cvcolor.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\packages\OpenCV.2.4.10\build\native\include\opencv\cvcontour.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\packages\OpenCV.2.4.10\build\native\include\opencv\cvlabel.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\packages\OpenCV.2.4.10\build\native\include\opencv\cvtrack.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\packages\OpenCV.2.4.10\build\native\include\opencv\cvaux.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\packages\OpenCV.2.4.10\build\native\include\opencv\cvaux.hpp">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\packages\OpenCV.2.4.10\build\native\include\opencv\cvblob.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -82,10 +82,22 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\packages\OpenCV.2.4.10\build\native\include\opencv\cvaux.cpp" />
+    <ClCompile Include="..\packages\OpenCV.2.4.10\build\native\include\opencv\cvblob.cpp" />
+    <ClCompile Include="..\packages\OpenCV.2.4.10\build\native\include\opencv\cvcolor.cpp" />
+    <ClCompile Include="..\packages\OpenCV.2.4.10\build\native\include\opencv\cvcontour.cpp" />
+    <ClCompile Include="..\packages\OpenCV.2.4.10\build\native\include\opencv\cvlabel.cpp" />
+    <ClCompile Include="..\packages\OpenCV.2.4.10\build\native\include\opencv\cvtrack.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="기본 받기소스.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="소스.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\packages\OpenCV.2.4.10\build\native\include\opencv\cvaux.h" />
+    <ClInclude Include="..\packages\OpenCV.2.4.10\build\native\include\opencv\cvaux.hpp" />
+    <ClInclude Include="..\packages\OpenCV.2.4.10\build\native\include\opencv\cvblob.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
