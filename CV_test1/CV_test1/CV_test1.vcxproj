@@ -88,6 +88,7 @@
     <ClCompile Include="..\packages\OpenCV.2.4.10\build\native\include\opencv\cvcontour.cpp" />
     <ClCompile Include="..\packages\OpenCV.2.4.10\build\native\include\opencv\cvlabel.cpp" />
     <ClCompile Include="..\packages\OpenCV.2.4.10\build\native\include\opencv\cvtrack.cpp" />
+    <ClCompile Include="JH.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="기본 받기소스.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

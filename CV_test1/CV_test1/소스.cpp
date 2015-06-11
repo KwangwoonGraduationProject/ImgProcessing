@@ -2,9 +2,132 @@
 #include <iostream>
 #include "opencv\highgui.h"
 #include "opencv\cv.h"
+#include "opencv\cvblob.h"
 
 
 using namespace std;
+using namespace cvb;
+
+int main()
+{
+	IplImage *frame2=cvLoadImage("test3.png",0);
+	//IplImage *frame2;
+	//CvCapture *capture = cvCaptureFromCAM(0);
+	//frame2 = cvQueryFrame(capture);
+	int width = frame2->width;
+	int height = frame2->height;
+	IplImage *frame = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 1);
+
+	IplImage *enhance = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 1);
+	IplImage *fraBlur = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 1);
+	IplImage *iplAvg = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 1);
+	IplImage *tempNega = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 1);
+	IplImage *tempDcNo = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 1);
+	IplImage *highThresh = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 1);
+	IplImage *lowThresh = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 1);
+	CvBlobs blob;
+	CvBlobs blob2;
+	IplImage *label = cvCreateImage(cvSize(width, height), IPL_DEPTH_LABEL, 1);
+	IplImage *labelOut = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 3);
+	IplImage *label2 = cvCreateImage(cvSize(width, height), IPL_DEPTH_LABEL, 1);
+	IplImage *labelOut2 = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 3);
+	cvNamedWindow("Origin", 1);
+	cvNamedWindow("output", 1);
+	cvNamedWindow("output2", 1);
+	cvNamedWindow("ThreshHigh", 1);
+	cvNamedWindow("ThreshLow", 1);
+	cvNamedWindow("Blob", 1);
+	cvNamedWindow("Blob2", 1);
+	CvScalar fraAvg, fraStd;
+
+
+	//frame = cvLoadImage("test3.png", 0);
+
+	while (1)
+	{
+		//frame2 = cvQueryFrame(capture);
+		//cvCvtColor(frame2, frame, CV_RGB2GRAY);
+		//cvNot(frame, frame);
+		cvCopyImage(frame2, frame);
+
+		
+		cvSmooth(frame, fraBlur, CV_BLUR, 49, 49);
+		fraAvg = cvAvg(frame) ;
+		
+		cvSet(iplAvg, cvScalarAll(fraAvg.val[0]));
+		cvSub(frame, fraBlur, enhance);
+		cvAbs(enhance, enhance);
+		//cvAdd(enhance, iplAvg, enhance);
+		cvEqualizeHist(enhance, enhance);
+		fraAvg = cvAvg(enhance);
+
+		
+
+		/*cvNot(enhance, tempNega);
+		cvSet(iplAvg, cvScalarAll(0.7));
+		cvMul(tempNega, iplAvg, tempNega);*/
+		cvSub(frame, enhance, tempDcNo);
+		cvNot(tempDcNo, tempDcNo);
+		cvEqualizeHist(tempDcNo, tempDcNo);
+		cvErode(tempDcNo, tempDcNo, 0, 1);
+		cvDilate(tempDcNo, tempDcNo, 0, 1);
+
+		
+		cvThreshold(enhance, highThresh, 140, 255, CV_THRESH_BINARY);
+		cvAvgSdv(tempDcNo, &fraAvg, &fraStd);
+		/*IplImage *lowThresh = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 1);
+		cvThreshold(frame, lowThresh, fraStd.val[0]*1.2, 255, CV_THRESH_BINARY_INV);*/
+
+		
+		cvThreshold(tempDcNo, lowThresh, 140, 255, CV_THRESH_BINARY);
+
+		cvErode(highThresh, highThresh, 0, 2);
+		cvDilate(highThresh, highThresh, 0, 2);
+		cvErode(lowThresh, lowThresh, 0, 1);
+		cvDilate(lowThresh, lowThresh, 0, 1);
+
+		
+		cvLabel(highThresh, label, blob);
+		cvRenderBlobs(label, blob, frame, labelOut);
+		
+		
+		cvLabel(lowThresh, label2, blob2);
+		cvRenderBlobs(label2, blob2, frame, labelOut2);
+
+
+
+
+		
+		cvShowImage("Origin", frame);
+		cvShowImage("output", enhance);
+		cvShowImage("output2", tempDcNo);
+		cvShowImage("ThreshHigh", highThresh);
+		cvShowImage("ThreshLow", lowThresh);
+		cvShowImage("Blob", labelOut);
+		cvShowImage("Blob2", labelOut2);
+		
+
+		if (cvWaitKey(33) >= 27) break;
+	}
+	//while (1)
+	//{
+	//	if (cvWaitKey(33) >= 27) break;
+	//}
+
+
+	return 0;
+}
+#endif
+
+#if 0
+#include <iostream>
+#include "opencv\highgui.h"
+#include "opencv\cv.h"
+#include "opencv\cvblob.h"
+
+
+using namespace std;
+using namespace cvb;
 
 int main()
 {
@@ -15,17 +138,77 @@ int main()
 	int height = frame->height;
 
 	IplImage *enhance = cvCreateImage(cvSize(width,height),IPL_DEPTH_8U,1);
+	IplImage *fraBlur = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 1);
+	cvSmooth(frame, fraBlur, CV_BLUR, 49, 49);
+	CvScalar fraAvg = cvAvg(frame), fraStd;
+	IplImage *iplAvg = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 1);
+	cvSet(iplAvg, cvScalarAll(fraAvg.val[0]));
+	cvSub(frame, fraBlur, enhance);
+	cvAbs(enhance, enhance);
+	//cvAdd(enhance, iplAvg, enhance);
+	cvEqualizeHist(enhance, enhance);
 	
+	fraAvg = cvAvg(enhance);
+
+	IplImage *tempNega = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 1);
+	IplImage *tempDcNo = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 1);
+
+	/*cvNot(enhance, tempNega);
+	cvSet(iplAvg, cvScalarAll(0.7));
+	cvMul(tempNega, iplAvg, tempNega);*/
+	cvSub(frame, enhance, tempDcNo);
+	cvNot(tempDcNo, tempDcNo);
+	cvEqualizeHist(tempDcNo, tempDcNo);
+	cvErode(tempDcNo, tempDcNo, 0, 1);
+	cvDilate(tempDcNo, tempDcNo, 0, 1);
+
+	IplImage *highThresh = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 1);
+	cvThreshold(enhance, highThresh, 160, 255, CV_THRESH_BINARY);
+
+	cvAvgSdv(tempDcNo, &fraAvg, &fraStd);
+	/*IplImage *lowThresh = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 1);
+	cvThreshold(frame, lowThresh, fraStd.val[0]*1.2, 255, CV_THRESH_BINARY_INV);*/
+
+	IplImage *lowThresh = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 1);
+	cvThreshold(tempDcNo, lowThresh, 160, 255, CV_THRESH_BINARY);
+
+	cvErode(highThresh, highThresh, 0, 2);
+	cvDilate(highThresh, highThresh, 0, 2);
+	cvErode(lowThresh, lowThresh, 0, 1);
+	cvDilate(lowThresh, lowThresh, 0, 1);
+
+	CvBlobs blob;
+	IplImage *label = cvCreateImage(cvSize(width, height), IPL_DEPTH_LABEL, 1);
+	cvLabel(highThresh, label, blob);
+	IplImage *labelOut = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 3);
+	cvRenderBlobs(label, blob, frame, labelOut);
+	CvBlobs blob2;
+	IplImage *label2 = cvCreateImage(cvSize(width, height), IPL_DEPTH_LABEL, 1);
+	cvLabel(lowThresh, label2, blob2);
+	IplImage *labelOut2 = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 3);
+	cvRenderBlobs(label2, blob2, frame, labelOut2);
+		
+
 	cvNamedWindow("Origin", 1);
 	cvShowImage("Origin", frame);
 	cvNamedWindow("output", 1);
 	cvShowImage("output", enhance);
-	
+	cvNamedWindow("output2", 1);
+	cvShowImage("output2", tempDcNo);
+	cvNamedWindow("ThreshHigh", 1);
+	cvShowImage("ThreshHigh", highThresh); 
+	cvNamedWindow("ThreshLow", 1);
+	cvShowImage("ThreshLow", lowThresh);
+	cvNamedWindow("Blob", 1);
+	cvShowImage("Blob", labelOut);
+	cvNamedWindow("Blob2", 1);
+	cvShowImage("Blob2", labelOut2);
 
 	while (1)
 	{
 		if (cvWaitKey(33) >= 27) break;
 	}
+	
 
 	return 0;
 }
@@ -39,7 +222,7 @@ int main()
 {
 	IplImage *frame;
 	CvCapture *capture = cvCaptureFromCAM(0);
-	cvNamedWindow("window");
+	cvNamedWindow("window",CV_WINDOW_AUTOSIZE);
 
 	while (1)
 	{
@@ -49,7 +232,8 @@ int main()
 		if (cvWaitKey(33) >= 27)
 			break;
 	}
-
+	cvReleaseCapture(&capture);
+	cvDestroyAllWindows();
 }
 
 #endif

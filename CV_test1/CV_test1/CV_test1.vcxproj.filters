@@ -45,6 +45,9 @@
     <ClCompile Include="..\packages\OpenCV.2.4.10\build\native\include\opencv\cvtrack.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="JH.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\packages\OpenCV.2.4.10\build\native\include\opencv\cvaux.h">

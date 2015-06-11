@@ -1,4 +1,4 @@
-#if 1
+#if 0
 #include "opencv\highgui.h"
 #include "opencv\cv.h"
 #include "opencv\cvblob.h"
@@ -8,7 +8,7 @@
 #define Blockk 49
 #define TH 0.8
 #define TL 0.0000001
-#define imgPath "test15.jpg"
+#define imgPath "test3.png"
 
 using namespace std;
 using namespace cvb;
@@ -16,14 +16,16 @@ int main()
 {
 	IplImage *frame2;
 	//CvCapture *capture = cvCaptureFromCAM(0);
+	//CvCapture *capture = cvCaptureFromAVI("capture.mpg");
 	CvBlobs blob;
-	//frame2 = cvQueryFrame(capture);
+    //frame2 = cvQueryFrame(capture);
 	frame2 = cvLoadImage(imgPath, 1);
 	
 	unsigned int numLabel, temp_maxx, temp_maxy, temp_minx, temp_miny, temp_area;
 	int width = frame2->width;
 	int height = frame2->height;
-	cout << "width : " << width << " height : " << height << endl;
+	int blobSize;
+	cout << width << " X " << height << endl;
 	IplImage *frame = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 1);
 	IplImage *dcNotch = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 1);
 	IplImage *blurImg = cvCreateImage(cvSize(width, height), IPL_DEPTH_8U, 1);
@@ -58,16 +60,16 @@ int main()
 		cvAbs(dcNotch, dcNotch);
 		cvShowImage("Sub", dcNotch);
 
-		cvSet(cvCons, cvScalarAll(cvAvg(dcNotch).val[0] * 5));
-		cvAdd(dcNotch, cvCons, dcNotch);
+		//cvSet(cvCons, cvScalarAll(cvAvg(dcNotch).val[0] * 5));
+		//cvAdd(dcNotch, cvCons, dcNotch);
 		//cvShowImage("DC-Notch", dcNotch);
 
-		//cvEqualizeHist(dcNotch, dcNotch);
+		cvEqualizeHist(dcNotch, dcNotch);
 		CvScalar avera = cvAvg(dcNotch);
 		
 		///ÀÌÁøÈ­ Part
 		CvScalar cvav = cvAvg(dcNotch);
-		cvThreshold(dcNotch, highBin, cvav.val[0]*1.0, 255, CV_THRESH_BINARY);
+		cvThreshold(dcNotch, highBin, 100, 255, CV_THRESH_BINARY);
 
 		//cvNot(frame, frame);
 		cvAdd(dcNotch, cvCons, dcNotch);
@@ -83,7 +85,8 @@ int main()
 		
 		cvRenderBlobs(label, blob, frame, frameLabel2);
 
-		for (int i = 1; i < blob.size(); i++)
+		blobSize = blob.size();
+		for (int i = 1; i < blobSize; i++)
 		{
 			temp_maxx = blob[i]->maxx;
 			temp_maxy = blob[i]->maxy;
